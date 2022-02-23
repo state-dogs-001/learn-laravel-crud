@@ -114,7 +114,7 @@ export default {
     },
     getProduct() {
       axios
-        .get(`http://localhost/api/product/show-product/${this.id}`)
+        .get(`/api/product/show-product/${this.id}`)
         .then((res) => {
           this.product = res.data;
         })
@@ -139,7 +139,7 @@ export default {
     },
     updateClick() {
       axios
-        .patch(`http://localhost/api/product/update-product/${this.id}`, {
+        .patch(`/api/product/update-product/${this.id}`, {
           product_name: this.productName,
           product_price: this.productPrice,
           product_img: this.productImg,

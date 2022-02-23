@@ -20,49 +20,76 @@
 
             <!-- Body -->
             <div class="card-body">
-              <div class="table-responsive">
-                <table class="table">
-                  <thead class="table-secondary">
-                    <tr>
-                      <th scope="col">ID</th>
-                      <th scope="col">Image</th>
-                      <th scope="col">Name</th>
-                      <th scope="col">Price</th>
-                      <th scope="col">Description</th>
-                      <th scope="col" colspan="2">Actions</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr v-for="product in products" :key="product.product_name">
-                      <td>{{ product.id }}</td>
-                      <td width="150px">
-                        <img
-                          :src="product.product_img"
-                          width="100%"
-                          class="img-fluid"
-                        />
-                      </td>
-                      <td>{{ product.product_name }}</td>
-                      <td>{{ product.product_price }}</td>
-                      <td>{{ product.product_description }}</td>
-                      <td>
-                        <button
-                          @click="deleteClick(product.id)"
-                          class="btn btn-danger"
+              <div class="row">
+                <!-- Search Text -->
+                <div class="col-md-5 col-sm-12 mb-3">
+                  <form class="d-flex" @submit.stop.prevent="searchClick">
+                    <div class="input-group">
+                      <input
+                        class="form-control"
+                        type="search"
+                        v-model="searchText"
+                        placeholder="Search products here"
+                        aria-label="Search"
+                        required
+                      />
+                      <button class="btn btn-outline-success" type="submit">
+                        Search
+                      </button>
+                    </div>
+                  </form>
+                </div>
+
+                <!-- Table -->
+                <div class="col-12">
+                  <div class="table-responsive">
+                    <table class="table">
+                      <thead class="table-secondary">
+                        <tr>
+                          <th scope="col">ID</th>
+                          <th scope="col">Image</th>
+                          <th scope="col">Name</th>
+                          <th scope="col">Price</th>
+                          <th scope="col">Description</th>
+                          <th scope="col" colspan="2">Actions</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr
+                          v-for="product in products"
+                          :key="product.product_name"
                         >
-                          Delete
-                        </button>
-                      </td>
-                      <td>
-                        <a
-                          class="btn btn-primary"
-                          :href="'/product/config/?id=' + product.id"
-                          >Config</a
-                        >
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
+                          <td>{{ product.id }}</td>
+                          <td width="150px">
+                            <img
+                              :src="product.product_img"
+                              width="100%"
+                              class="img-fluid"
+                            />
+                          </td>
+                          <td>{{ product.product_name }}</td>
+                          <td>{{ product.product_price }}</td>
+                          <td>{{ product.product_description }}</td>
+                          <td>
+                            <button
+                              @click="deleteClick(product.id)"
+                              class="btn btn-danger"
+                            >
+                              Delete
+                            </button>
+                          </td>
+                          <td>
+                            <a
+                              class="btn btn-primary"
+                              :href="'/product/config/?id=' + product.id"
+                              >Config</a
+                            >
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -75,15 +102,28 @@
 <script>
 export default {
   data: () => ({
+    // For search text
+    searchText: null,
+
     products: null,
   }),
   created() {
     this.getProducts();
   },
   methods: {
+    // Search products function
+    searchClick() {
+      axios
+        .get(`/api/product/search-product/${this.searchText}`)
+        .then((res) => {
+          this.products = res.data
+        });
+    },
+
+    // Get products function
     getProducts() {
       axios
-        .get("http://localhost/api/product/products")
+        .get("/api/product/products")
         .then((res) => {
           this.products = res.data;
         })
@@ -91,11 +131,13 @@ export default {
           console.log(err);
         });
     },
+
+    // Delete product function
     deleteClick(id) {
       const response = confirm("Do you want to delete this product?");
       if (response == true) {
         axios
-          .delete(`http://localhost/api/product/delete-product/${id}`)
+          .delete(`/api/product/delete-product/${id}`)
           .then(() => {
             alert("Delete successfully");
             window.location.reload();

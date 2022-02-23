@@ -5467,6 +5467,7 @@ __webpack_require__.r(__webpack_exports__);
   updated: function updated() {
     var _this = this;
 
+    // Update image preview
     var imgPreview = document.getElementById("imgPreview");
     var imgInput = document.getElementById("input_2");
     imgInput.addEventListener("keyup", function () {
@@ -5479,7 +5480,7 @@ __webpack_require__.r(__webpack_exports__);
       imgPreview.src = "https://www.penworthy.com/Image/Getimage?id=C:RepositoriesCommonAbout%20UsSlide1.jpg";
     },
     addClick: function addClick() {
-      axios.post("http://localhost/api/product/create-product", {
+      axios.post("/api/product/create-product", {
         product_name: this.productName,
         product_price: this.productPrice,
         product_img: this.productImg,
@@ -5626,7 +5627,7 @@ __webpack_require__.r(__webpack_exports__);
     getProduct: function getProduct() {
       var _this2 = this;
 
-      axios.get("http://localhost/api/product/show-product/".concat(this.id)).then(function (res) {
+      axios.get("/api/product/show-product/".concat(this.id)).then(function (res) {
         _this2.product = res.data;
       }).then(function () {
         _this2.productName = _this2.product.product_name;
@@ -5645,7 +5646,7 @@ __webpack_require__.r(__webpack_exports__);
       imgPreview.src = "https://www.penworthy.com/Image/Getimage?id=C:RepositoriesCommonAbout%20UsSlide1.jpg";
     },
     updateClick: function updateClick() {
-      axios.patch("http://localhost/api/product/update-product/".concat(this.id), {
+      axios.patch("/api/product/update-product/".concat(this.id), {
         product_name: this.productName,
         product_price: this.productPrice,
         product_img: this.productImg,
@@ -5747,9 +5748,38 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   data: function data() {
     return {
+      // For search text
+      searchText: null,
       products: null
     };
   },
@@ -5757,20 +5787,30 @@ __webpack_require__.r(__webpack_exports__);
     this.getProducts();
   },
   methods: {
-    getProducts: function getProducts() {
+    // Search products function
+    searchClick: function searchClick() {
       var _this = this;
 
-      axios.get("http://localhost/api/product/products").then(function (res) {
+      axios.get("/api/product/search-product/".concat(this.searchText)).then(function (res) {
         _this.products = res.data;
+      });
+    },
+    // Get products function
+    getProducts: function getProducts() {
+      var _this2 = this;
+
+      axios.get("/api/product/products").then(function (res) {
+        _this2.products = res.data;
       })["catch"](function (err) {
         console.log(err);
       });
     },
+    // Delete product function
     deleteClick: function deleteClick(id) {
       var response = confirm("Do you want to delete this product?");
 
       if (response == true) {
-        axios["delete"]("http://localhost/api/product/delete-product/".concat(id)).then(function () {
+        axios["delete"]("/api/product/delete-product/".concat(id)).then(function () {
           alert("Delete successfully");
           window.location.reload();
         })["catch"](function (err) {
@@ -29402,64 +29442,132 @@ var render = function () {
             _vm._m(0),
             _vm._v(" "),
             _c("div", { staticClass: "card-body" }, [
-              _c("div", { staticClass: "table-responsive" }, [
-                _c("table", { staticClass: "table" }, [
-                  _vm._m(1),
-                  _vm._v(" "),
+              _c("div", { staticClass: "row" }, [
+                _c("div", { staticClass: "col-md-5 col-sm-12 mb-3" }, [
                   _c(
-                    "tbody",
-                    _vm._l(_vm.products, function (product) {
-                      return _c("tr", { key: product.product_name }, [
-                        _c("td", [_vm._v(_vm._s(product.id))]),
-                        _vm._v(" "),
-                        _c("td", { attrs: { width: "150px" } }, [
-                          _c("img", {
-                            staticClass: "img-fluid",
-                            attrs: { src: product.product_img, width: "100%" },
-                          }),
-                        ]),
-                        _vm._v(" "),
-                        _c("td", [_vm._v(_vm._s(product.product_name))]),
-                        _vm._v(" "),
-                        _c("td", [_vm._v(_vm._s(product.product_price))]),
-                        _vm._v(" "),
-                        _c("td", [_vm._v(_vm._s(product.product_description))]),
-                        _vm._v(" "),
-                        _c("td", [
-                          _c(
-                            "button",
+                    "form",
+                    {
+                      staticClass: "d-flex",
+                      on: {
+                        submit: function ($event) {
+                          $event.stopPropagation()
+                          $event.preventDefault()
+                          return _vm.searchClick.apply(null, arguments)
+                        },
+                      },
+                    },
+                    [
+                      _c("div", { staticClass: "input-group" }, [
+                        _c("input", {
+                          directives: [
                             {
-                              staticClass: "btn btn-danger",
-                              on: {
-                                click: function ($event) {
-                                  return _vm.deleteClick(product.id)
-                                },
-                              },
+                              name: "model",
+                              rawName: "v-model",
+                              value: _vm.searchText,
+                              expression: "searchText",
                             },
-                            [
-                              _vm._v(
-                                "\n                        Delete\n                      "
-                              ),
-                            ]
-                          ),
-                        ]),
+                          ],
+                          staticClass: "form-control",
+                          attrs: {
+                            type: "search",
+                            placeholder: "Search products here",
+                            "aria-label": "Search",
+                            required: "",
+                          },
+                          domProps: { value: _vm.searchText },
+                          on: {
+                            input: function ($event) {
+                              if ($event.target.composing) {
+                                return
+                              }
+                              _vm.searchText = $event.target.value
+                            },
+                          },
+                        }),
                         _vm._v(" "),
-                        _c("td", [
-                          _c(
-                            "a",
-                            {
-                              staticClass: "btn btn-primary",
-                              attrs: {
-                                href: "/product/config/?id=" + product.id,
-                              },
-                            },
-                            [_vm._v("Config")]
-                          ),
-                        ]),
-                      ])
-                    }),
-                    0
+                        _c(
+                          "button",
+                          {
+                            staticClass: "btn btn-outline-success",
+                            attrs: { type: "submit" },
+                          },
+                          [
+                            _vm._v(
+                              "\n                      Search\n                    "
+                            ),
+                          ]
+                        ),
+                      ]),
+                    ]
                   ),
+                ]),
+                _vm._v(" "),
+                _c("div", { staticClass: "col-12" }, [
+                  _c("div", { staticClass: "table-responsive" }, [
+                    _c("table", { staticClass: "table" }, [
+                      _vm._m(1),
+                      _vm._v(" "),
+                      _c(
+                        "tbody",
+                        _vm._l(_vm.products, function (product) {
+                          return _c("tr", { key: product.product_name }, [
+                            _c("td", [_vm._v(_vm._s(product.id))]),
+                            _vm._v(" "),
+                            _c("td", { attrs: { width: "150px" } }, [
+                              _c("img", {
+                                staticClass: "img-fluid",
+                                attrs: {
+                                  src: product.product_img,
+                                  width: "100%",
+                                },
+                              }),
+                            ]),
+                            _vm._v(" "),
+                            _c("td", [_vm._v(_vm._s(product.product_name))]),
+                            _vm._v(" "),
+                            _c("td", [_vm._v(_vm._s(product.product_price))]),
+                            _vm._v(" "),
+                            _c("td", [
+                              _vm._v(_vm._s(product.product_description)),
+                            ]),
+                            _vm._v(" "),
+                            _c("td", [
+                              _c(
+                                "button",
+                                {
+                                  staticClass: "btn btn-danger",
+                                  on: {
+                                    click: function ($event) {
+                                      return _vm.deleteClick(product.id)
+                                    },
+                                  },
+                                },
+                                [
+                                  _vm._v(
+                                    "\n                            Delete\n                          "
+                                  ),
+                                ]
+                              ),
+                            ]),
+                            _vm._v(" "),
+                            _c("td", [
+                              _c(
+                                "a",
+                                {
+                                  staticClass: "btn btn-primary",
+                                  attrs: {
+                                    href: "/product/config/?id=" + product.id,
+                                  },
+                                },
+                                [_vm._v("Config")]
+                              ),
+                            ]),
+                          ])
+                        }),
+                        0
+                      ),
+                    ]),
+                  ]),
                 ]),
               ]),
             ]),

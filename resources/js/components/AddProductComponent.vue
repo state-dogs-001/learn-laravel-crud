@@ -99,6 +99,7 @@ export default {
       "https://www.penworthy.com/Image/Getimage?id=C:RepositoriesCommonAbout%20UsSlide1.jpg";
   },
   updated() {
+    // Update image preview
     let imgPreview = document.getElementById("imgPreview");
     let imgInput = document.getElementById("input_2");
     imgInput.addEventListener("keyup", () => {
@@ -114,7 +115,7 @@ export default {
 
     addClick() {
       axios
-        .post("http://localhost/api/product/create-product", {
+        .post("/api/product/create-product", {
           product_name: this.productName,
           product_price: this.productPrice,
           product_img: this.productImg,
