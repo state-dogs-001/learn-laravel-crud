@@ -54,6 +54,12 @@ class ProductController extends Controller
         return $response;
     }
 
+    public function showSome()
+    {
+        // Get some products
+        return Products::all()->take(6);
+    }
+
     /**
      * Update the specified resource in storage.
      *

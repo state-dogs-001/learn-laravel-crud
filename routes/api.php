@@ -29,8 +29,10 @@ Route::middleware('auth:sanctum')->post('/logout', [AuthController::class, 'logo
 
 // Product API Routers
 // Public
-// Get all product
+// Get all products
 Route::get('/product/products', [ProductController::class, 'index']);
+// Get some products
+Route::get('/product/some-products', [ProductController::class, 'showSome']);
 // Get product by params id
 Route::get('/product/show-product/{id}', [ProductController::class, 'show']);
 // Search product by name
